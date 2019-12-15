@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import './transaction.dart';
 
 void main() {
@@ -38,7 +39,7 @@ class MyHomePage extends StatelessWidget {
         title: Text('Expense Recorder'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+//        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
@@ -48,10 +49,79 @@ class MyHomePage extends StatelessWidget {
             ),
             width: double.infinity,
           ),
+          Card(
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  TextField(
+                   decoration: InputDecoration(labelText: 'Title'),
+                  ),
+                  TextField(
+                    decoration: InputDecoration(labelText: 'Amount'),
+                  ),
+                  FlatButton(
+                    child: Text(
+                      'Add Transaction',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    textColor: Colors.purple,
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ),
+          ),
           Column(
             children: transactions.map((tx) {
               return Card(
-                child: Text(tx.title),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      // decoration: BoxDecoration(
+                      //   border: Border.all(
+                      //     color: Colors.black,
+                      //     width: 2,
+                      //   ),
+                      // ),
+                      child: Text(
+                        '\u20B9' + tx.amount.toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.green,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          tx.title,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 5, right: 20),
+                          child: Text(
+                            DateFormat().format(tx.date),
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               );
             }).toList(),
           ),
