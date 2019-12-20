@@ -14,7 +14,7 @@ class _New_TransactionState extends State<New_Transaction> {
 
   final amountController = TextEditingController();
 
-  void submitData() {
+  void submitData() { 
     final enteredTitle = titleController.text;
     final enteredAmount = double.parse(amountController.text);
     if (enteredTitle.isEmpty || enteredAmount <= 0) {
