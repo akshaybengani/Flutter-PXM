@@ -16,7 +16,7 @@ class TransactionList extends StatelessWidget {
               return Column(
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.symmetric(vertical: 20),
+                    margin: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
                       'No Transactions Added yet!',
                       style: Theme.of(context).textTheme.title,
@@ -32,7 +32,7 @@ class TransactionList extends StatelessWidget {
           : ListView.builder(
               itemBuilder: (ctx, index) {
                 return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
                   elevation: 5,
                   child: ListTile(
                     leading: CircleAvatar(
@@ -57,11 +57,11 @@ class TransactionList extends StatelessWidget {
                     ),
                     trailing: MediaQuery.of(context).size.width > 360
                         ? FlatButton.icon(
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.delete,
                               color: Colors.white,
                             ),
-                            label: Text(
+                            label: const Text(
                               'Delete',
                               style: TextStyle(
                                   color: Colors.white,
@@ -71,7 +71,7 @@ class TransactionList extends StatelessWidget {
                             color: Theme.of(context).errorColor,
                           )
                         : IconButton(
-                            icon: Icon(Icons.delete),
+                            icon: const Icon(Icons.delete),
                             color: Theme.of(context).errorColor,
                             onPressed: () => deleteTx(transactions[index].id),
                           ),

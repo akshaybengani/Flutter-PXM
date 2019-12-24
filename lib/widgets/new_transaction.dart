@@ -70,7 +70,7 @@ class _New_TransactionState extends State<New_Transaction> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
+                margin: const EdgeInsets.symmetric(vertical: 10),
                 child: TextField(
                   decoration: InputDecoration(
                       labelText: 'Title', border: OutlineInputBorder()),
@@ -105,7 +105,7 @@ class _New_TransactionState extends State<New_Transaction> {
                 ),
               ),
               RaisedButton(
-                child: Text(
+                child: const Text(
                   'Add Transaction',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),

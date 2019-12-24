@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pers_exp_mon/widgets/chart.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -25,15 +23,15 @@ class MyApp extends StatelessWidget {
         errorColor: Colors.red,
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
-            title: TextStyle(
+            title: const TextStyle(
               fontFamily: 'OpenSans',
               fontWeight: FontWeight.bold,
               fontSize: 18,
             ),
-            button: TextStyle(color: Colors.white)),
+            button: const TextStyle(color: Colors.white)),
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
-                title: TextStyle(
+                title: const TextStyle(
                   fontFamily: 'Opensans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -109,11 +107,11 @@ class _MyHomePageState extends State<MyHomePage> {
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
     final PreferredSizeWidget appBar = Platform.isIOS
         ? CupertinoNavigationBar(
-            middle: Text('Pers Exp.'),
+            middle: const Text('Pers Exp.'),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(
+                const Text(
                   'Show Chart',
                   style:
                       TextStyle(fontFamily: 'Open Sans', color: Colors.white),
@@ -134,14 +132,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           )
         : AppBar(
-            title: Text(
+            title: const Text(
               'Pers Exp.',
               style: TextStyle(fontFamily: 'Open Sans', color: Colors.white),
             ),
             actions: <Widget>[
               Row(
                 children: <Widget>[
-                  Text(
+                  const Text(
                     'Show Chart',
                     style:
                         TextStyle(fontFamily: 'Open Sans', color: Colors.white),
@@ -205,11 +203,11 @@ class _MyHomePageState extends State<MyHomePage> {
             appBar: appBar,
             body: pageBody,
             floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
+              FloatingActionButtonLocation.centerFloat,
             floatingActionButton: Platform.isIOS
                 ? Container()
                 : FloatingActionButton(
-                    child: Icon(Icons.add),
+                    child: const Icon(Icons.add),
                     onPressed: () => _startAddNewTransaction(context),
                   ),
           );
