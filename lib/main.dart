@@ -85,12 +85,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   void fetchUserTrans() async {
     await Provider.of<DatabaseProvider>(context, listen: false)
-            .getTransactionList()
-            .then((list) {
-            setState(() {
-               _isLoading = false;
-               _userTransactions = list;
-            });
+        .getTransactionList()
+        .then((list) {
+      setState(() {
+        _isLoading = false;
+        _userTransactions = list;
+      });
     });
   }
 
@@ -228,8 +228,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                         mediaQuery.padding.top) *
                     1,
                 child: Chart(_recentTransactions),
-              )
-            else if (_showChart && isLandscape == false)
+              ),
+            if (_showChart && isLandscape == false)
               Container(
                 height: (mediaQuery.size.height -
                         appBar.preferredSize.height -
@@ -237,13 +237,22 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                     0.3,
                 child: Chart(_recentTransactions),
               ),
-            Container(
-              height: (mediaQuery.size.height -
-                      appBar.preferredSize.height -
-                      mediaQuery.padding.top) *
-                  1,
-              child: TransactionList(_userTransactions, deleteTransaction),
-            ),
+             if (_showChart && isLandscape == false)
+              Container(
+                height: (mediaQuery.size.height -
+                        appBar.preferredSize.height -
+                        mediaQuery.padding.top) *
+                    0.7,
+                child: TransactionList(_userTransactions, deleteTransaction),
+              ),
+             if (_showChart == false && isLandscape == false)
+              Container(
+                height: (mediaQuery.size.height -
+                        appBar.preferredSize.height -
+                        mediaQuery.padding.top) *
+                    1,
+                child: TransactionList(_userTransactions, deleteTransaction),
+              )
           ],
         ),
       ),
@@ -258,9 +267,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             ? Scaffold(
                 body: Center(
                   child: Container(
-                    width: 100,
-                    height: 100,
-                    child: Image.asset('assets/images/logo.jpg')),
+                      width: 100,
+                      height: 100,
+                      child: Image.asset('assets/images/logo.jpg')),
                 ),
               )
             : Scaffold(
