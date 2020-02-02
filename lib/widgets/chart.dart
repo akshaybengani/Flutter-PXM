@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pers_exp_mon/models/transaction.dart';
+import 'package:pers_exp_mon/models/exptrans.dart';
 import 'package:intl/intl.dart';
 import 'package:pers_exp_mon/widgets/chart_bar.dart';
 
 class Chart extends StatelessWidget {
-  final List<Transaction> recentTransactions;
+  final List<ExpTrans> recentTransactions;
 
   Chart(this.recentTransactions);
 
@@ -16,9 +16,9 @@ class Chart extends StatelessWidget {
       double totalSum = 0;
 
       for (var i = 0; i < recentTransactions.length; i++) {
-        if (recentTransactions[i].date.day == weekDay.day &&
-            recentTransactions[i].date.month == weekDay.month &&
-            recentTransactions[i].date.year == weekDay.year) {
+        if (DateTime.parse(recentTransactions[i].date).day == weekDay.day &&
+            DateTime.parse(recentTransactions[i].date).month == weekDay.month &&
+            DateTime.parse(recentTransactions[i].date).year == weekDay.year) {
           totalSum = totalSum + recentTransactions[i].amount;
         }
       }

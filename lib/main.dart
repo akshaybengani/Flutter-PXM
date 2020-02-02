@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:pers_exp_mon/providers/databaseProvider.dart';
 import 'package:pers_exp_mon/widgets/chart.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
-import './models/transaction.dart';
+import './models/exptrans.dart';
 
 void main() {
   // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -15,32 +17,39 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Personal Expenses',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        accentColor: Colors.amber,
-        errorColor: Colors.red,
-        fontFamily: 'Quicksand',
-        textTheme: ThemeData.light().textTheme.copyWith(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(
+          value: DatabaseProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Personal Expenses',
+        theme: ThemeData(
+          primarySwatch: Colors.deepPurple,
+          accentColor: Colors.amber,
+          errorColor: Colors.red,
+          fontFamily: 'Quicksand',
+          textTheme: ThemeData.light().textTheme.copyWith(
               title: const TextStyle(
                 fontFamily: 'OpenSans',
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
-              button: const TextStyle(color: Colors.white)
-            ),
-        appBarTheme: AppBarTheme(
-          textTheme: ThemeData.light().textTheme.copyWith(
-                title: const TextStyle(
-                  fontFamily: 'Opensans',
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              button: const TextStyle(color: Colors.white)),
+          appBarTheme: AppBarTheme(
+            textTheme: ThemeData.light().textTheme.copyWith(
+                  title: const TextStyle(
+                    fontFamily: 'Opensans',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
+          ),
         ),
+        home: MyHomePage(),
       ),
-      home: MyHomePage(),
     );
   }
 }
@@ -53,11 +62,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
-  final List<Transaction> _userTransactions = [];
+  List<ExpTrans> _userTransactions = [];
+  bool _isLoading = true;
 
-  List<Transaction> get _recentTransactions {
+  List<ExpTrans> get _recentTransactions {
     return _userTransactions.where((tx) {
-      return tx.date.isAfter(
+      var mdate = DateTime.parse(tx.date);
+      return mdate.isAfter(
         DateTime.now().subtract(
           Duration(days: 7),
         ),
@@ -69,6 +80,18 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
+    fetchUserTrans();
+  }
+
+  void fetchUserTrans() async {
+    await Provider.of<DatabaseProvider>(context, listen: false)
+            .getTransactionList()
+            .then((list) {
+            setState(() {
+               _isLoading = false;
+               _userTransactions = list;
+            });
+    });
   }
 
   @override
@@ -83,22 +106,29 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  void _addNewTransaction(
-      String txTitle, double txAmount, DateTime chosenDate) {
-    final newTx = Transaction(
+//!
+  Future<void> _addNewTransaction(
+      String txTitle, double txAmount, DateTime chosenDate) async {
+    final newTx = ExpTrans(
       title: txTitle,
       amount: txAmount,
-      date: chosenDate,
+      date: chosenDate.toString(),
       id: DateTime.now().toString(),
     );
 
-    setState(() {
-      _userTransactions.add(newTx);
+    await Provider.of<DatabaseProvider>(context, listen: false)
+        .insertNewExpTrans(newTx)
+        .then((_) {
+      setState(() {
+        _userTransactions.add(newTx);
+      });
     });
   }
 
+//!
   void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: ctx,
       builder: (_) {
         return GestureDetector(
@@ -110,14 +140,20 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     );
   }
 
-  void deleteTransaction(String id) {
-    setState(() {
-      _userTransactions.removeWhere((tx) {
-        return tx.id == id;
+// !
+  Future<void> deleteTransaction(String id) async {
+    await Provider.of<DatabaseProvider>(context, listen: false)
+        .deletExpTrans(id)
+        .then((_) {
+      setState(() {
+        _userTransactions.removeWhere((tx) {
+          return tx.id == id;
+        });
       });
     });
   }
 
+// !
   bool _showChart = false;
 
   @override
@@ -205,7 +241,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               height: (mediaQuery.size.height -
                       appBar.preferredSize.height -
                       mediaQuery.padding.top) *
-                  0.7,
+                  1,
               child: TransactionList(_userTransactions, deleteTransaction),
             ),
           ],
@@ -218,17 +254,26 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             child: pageBody,
             navigationBar: appBar,
           )
-        : Scaffold(
-            appBar: appBar,
-            body: pageBody,
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: Platform.isIOS
-                ? Container()
-                : FloatingActionButton(
-                    child: const Icon(Icons.add),
-                    onPressed: () => _startAddNewTransaction(context),
-                  ),
-          );
+        : _isLoading
+            ? Scaffold(
+                body: Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    child: Image.asset('assets/images/logo.jpg')),
+                ),
+              )
+            : Scaffold(
+                appBar: appBar,
+                body: pageBody,
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
+                floatingActionButton: Platform.isIOS
+                    ? Container()
+                    : FloatingActionButton(
+                        child: const Icon(Icons.add),
+                        onPressed: () => _startAddNewTransaction(context),
+                      ),
+              );
   }
 }

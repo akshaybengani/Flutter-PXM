@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-import 'package:pers_exp_mon/models/transaction.dart';
+import 'package:pers_exp_mon/models/exptrans.dart';
 
 class TransactionListItem extends StatelessWidget {
-  final Transaction transaction;
+  final ExpTrans transaction;
   final Function deleteTx;
 
   TransactionListItem(this.transaction,this.deleteTx);
@@ -29,7 +29,7 @@ class TransactionListItem extends StatelessWidget {
         style: Theme.of(context).textTheme.title,
       ),
       subtitle: Text(
-        DateFormat().format(transaction.date),
+        DateFormat().format(DateTime.parse(transaction.date)),
       ),
       trailing: MediaQuery.of(context).size.width > 360
           ? FlatButton.icon(

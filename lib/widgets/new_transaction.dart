@@ -62,7 +62,7 @@ class _New_TransactionState extends State<New_Transaction> {
             top: 10,
             left: 10,
             right: 10,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 50,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -89,7 +89,7 @@ class _New_TransactionState extends State<New_Transaction> {
                 // onChanged: (val) => amountInput = val,
               ),
               Container(
-                height: 70,
+                height: 50,
                 child: Row(
                   children: <Widget>[
                     Expanded(
